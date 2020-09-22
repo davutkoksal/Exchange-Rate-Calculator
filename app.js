@@ -9,36 +9,21 @@ const end1 = document.getElementById("end1");
 const end2 = document.getElementById("end2");
 
 amount.addEventListener("input", handleChange);
-select1.addEventListener("change", handleSelect1);
-select2.addEventListener("change", handleSelect2);
+select1.addEventListener("change", handleSelect.bind(this, "base"));
+select2.addEventListener("change", handleSelect.bind(this, "end"));
 
 let select1Value;
 let select2Value;
 
-//Handle First Select Input And Set the Rate Value
-function handleSelect1(e) {
-  select1Value = e.target.value;
-  select2Value = select2.value;
-  let base = e.target.value;
-  base1.innerText = base;
-  base2.innerText = base;
-  end1.innerText = select2Value;
-  end2.innerText = select2Value;
-  totalAmount.innerText = "0";
-  amount.value = "";
-  if (select1Value === "EUR" && select2Value === "EUR") {
-    rate.innerHTML = "1";
-  } else {
-    getData(base).then(
-      (r) => (rate.innerHTML = r.rates[select2Value].toFixed(2))
-    );
+//Handle Select Inputs And Set the Rate Value
+function handleSelect(parameter, e) {
+  if (parameter === "base") {
+    select1Value = e.target.value;
+    select2Value = select2.value;
+  } else if (parameter === "end") {
+    select1Value = select1.value;
+    select2Value = e.target.value;
   }
-}
-
-//Handle Second Select Input And Set the Rate Value
-function handleSelect2(e) {
-  select1Value = select1.value;
-  select2Value = e.target.value;
   let base = select1Value;
   base1.innerText = base;
   base2.innerText = base;
@@ -58,8 +43,8 @@ function handleSelect2(e) {
 //Handle the Total Amount Input And Calculate the Total Exchange Amount
 function handleChange(e) {
   const amount = +e.target.value;
-  let totalAmount = amount * +rate.innerText;
-  totalAmount.innerText = totalAmount.toFixed(2);
+  let totalAmountValue = amount * +rate.innerText;
+  totalAmount.innerText = totalAmountValue.toFixed(2);
 }
 
 //Fetch Data From exchangeratesapi
